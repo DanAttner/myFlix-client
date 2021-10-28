@@ -1,15 +1,15 @@
 import React from "react";
 import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-card/movie-card';
+import { MovieView } from '../movie-view/movie-view';
 
 export class MainView extends React.Component {
   constructor(){
     super();
     this.state = {
       movies: [
-        { _id: 1, Title: 'Inception', Description: 'desc1...', ImagePath: '...'},
-        { _id: 2, Title: 'The Shawshank Redemption', Description: 'desc2...', ImagePath: '...'},
-        { _id: 3, Title: 'Gladiator', Description: 'desc3...', ImagePath: '...'}
+        { _id: 1, Title: 'Inception', Description: 'Inception description would go here', ImagePath: '...'},
+        { _id: 2, Title: 'The Shawshank Redemption', Description: 'Shawshank description would go here', ImagePath: '...'},
+        { _id: 3, Title: 'Gladiator', Description: 'Gladiator description would go here', ImagePath: '...'}
       ],
       selectedMovie: null
     }
@@ -26,14 +26,16 @@ export class MainView extends React.Component {
   render() {
     const { movies, selectedMovie } = this.state;
 
+    //if there are no movies
+    if (movies.length === 0) return <div className="main-view">The list is empty!</div>;
+
+    //if we select a movie from the list
     if (selectedMovie){
-      console.log(this.state.selectedMovie);
-      return <MovieView movie={selectedMovie} />;
+      return <MovieView movie={selectedMovie} 
+        onBackClick={back => {this.setSelectedMovie(back);}} />;
     } 
 
-    if (movies.length === 0) 
-      return <div className="main-view">The list is empty!</div>;
-
+    //default main view
     else {
       return (
         <div className="main-view">
