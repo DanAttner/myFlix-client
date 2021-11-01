@@ -32,9 +32,9 @@ export function RegistrationView(props) {
             <Navbar.Brand href="#">myFlix</Navbar.Brand>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                <Nav.Link href="#"> link 1 </Nav.Link>
-                <Nav.Link href="#"> link 2 </Nav.Link>
-                <Nav.Link href="#"> link 3 </Nav.Link>
+                  <Nav.Link href="#"> link 1 </Nav.Link>
+                  <Nav.Link href="#"> link 2 </Nav.Link>
+                  <Nav.Link href="#"> link 3 </Nav.Link>
                 </Nav>
             </Navbar.Collapse>
           </Container>

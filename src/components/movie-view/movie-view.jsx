@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
+
 
 export class MovieView extends React.Component {
 
@@ -7,25 +9,33 @@ export class MovieView extends React.Component {
     const { movie, onBackClick } = this.props;
 
     return (
-      <div className="movie-view">
-        <div className="movie-poster">
-          <img src={movie.imagePath} /> 
-        </div>
 
-        <div className="movie-title">
-          <span className="label">Title: </span>
-          <span className="value">{movie.title}</span>
-        </div>
+      <Container>
+        <Navbar bg="dark" variant="dark" expand="lg" sticky="top"  >
+            <Container fluid>
+                <Navbar.Brand href="#"> myFlix </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link href="#"> link 1 </Nav.Link>
+                        <Nav.Link href="#"> link 2 </Nav.Link>
+                        <Nav.Link href="#"> link 3 </Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
 
-        <div className="movie-description">
-          <span className="label">Description: </span>
-          <span className="value">{movie.description}</span>
-        </div>
-
-        {/*button to set selected movie to null. therefore taking us back to main view*/}
-        <button onClick={() => {onBackClick(null);}}>Back</button>
-
-       </div>
+        <Row className="justify-content-md-center">
+          <Col md={9}>
+            <Card.Img variant="top" src={movie.imagePath} alt="https://via.placeholder.com/150" />
+            <Card.Body>
+              <Card.Title>{movie.title}</Card.Title>
+              <Card.Text>{movie.description}</Card.Text>
+              <Button onClick={() => {onBackClick(null);}} variant="link">Back</Button>
+            </Card.Body>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

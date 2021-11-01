@@ -9,7 +9,7 @@ export class MovieCard extends React.Component {
 
     return (
       <Card>
-        <Card.Img variant="top" src={movie.imagePath} />
+        <Card.Img variant="top" src={movie.imagePath} alt="https://via.placeholder.com/150" />
         <Card.Body>
           <Card.Title>{movie.title}</Card.Title>
           <Card.Text>{movie.description}</Card.Text>

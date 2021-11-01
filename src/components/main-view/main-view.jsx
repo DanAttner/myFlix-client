@@ -1,12 +1,12 @@
 import React from "react";
 import axios from 'axios';
-import Row from 'react-bootstrap/Row';
+import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
+
 
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { RegistrationView } from '../registration-view/registration-view';
-import { Col, Container, Navbar } from "react-bootstrap";
 
 export class MainView extends React.Component {
   constructor(){
@@ -84,15 +84,16 @@ export class MainView extends React.Component {
     //default main view, shows a list of movie cards
     return (
       <div className="main-view">
-        <Navbar>
+        <Navbar bg="dark" variant="dark" expland="lg">
           <Container fluid>
             <Navbar.Brand href="#"> myFlix </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-              <nav className="me-auto">
-                why doesn't this work
-                {/*<nav.link href="#"> link 1 </nav.link>*/}
-              </nav>
+              <Nav className="me-auto">
+                <Nav.Link href="#"> link 1 </Nav.Link>
+                <Nav.Link href="#"> link 2 </Nav.Link>
+                <Nav.Link href="#"> link 3 </Nav.Link>
+              </Nav>
             </Navbar.Collapse>  
           </Container>
         </Navbar>
