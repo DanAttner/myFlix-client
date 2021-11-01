@@ -17,20 +17,6 @@ export function LoginView(props) {
   };
 
   return (
-<<<<<<< Updated upstream
-    <form>
-      <label>
-        Username:
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
-      </label>
-      <label>
-        Password:
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      </label>
-      <button type="submit" onClick={handleSubmit}>Submit</button>
-    </form>
-=======
-
     <Container>
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container fluid>
@@ -90,7 +76,6 @@ export function LoginView(props) {
         </Row>
     </Container>
 
->>>>>>> Stashed changes
   );
 }
 
