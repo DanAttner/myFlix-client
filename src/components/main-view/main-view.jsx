@@ -1,9 +1,12 @@
 import React from "react";
 import axios from 'axios';
+import Row from 'react-bootstrap/Row';
 
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
+import { RegistrationView } from '../registration-view/registration-view';
+import { Col, Container, Navbar } from "react-bootstrap";
 
 export class MainView extends React.Component {
   constructor(){
@@ -44,10 +47,28 @@ export class MainView extends React.Component {
       user
     });
   }
+<<<<<<< Updated upstream
   
   
   render() {
     const { movies, selectedMovie, user } = this.state;
+=======
+
+  //When a user successfully registers
+  onRegistration(register) {
+    this.setState({
+      register
+    });
+  }
+
+  
+  
+  render() {
+    const { movies, selectedMovie, user, register } = this.state;
+
+    //register shit lmao!!!!!!!!!!!!!!!!!!!!!!!!
+    if (!register) return (<RegistrationView onRegistration={(register) => this.onRegistration(register)}/>);
+>>>>>>> Stashed changes
 
     /* If there is no user, the LoginView is rendered. If there is a user logged in, the user details are *passed as a prop to the LoginView*/
     if (!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)} />;
@@ -57,15 +78,44 @@ export class MainView extends React.Component {
 
     //if we select a movie from the list
     if (selectedMovie){
-      return <MovieView movie={selectedMovie} 
-        onBackClick={back => {this.setSelectedMovie(back);}} />;
-    } 
+      return(
+        <Row className="justify-content-md-center">
+          <Col md={8}>
+            <MovieView movie={selectedMovie} 
+              onBackClick={back => {this.setSelectedMovie(back);}} />
+          </Col>
+        </Row>
+      )
+    }   
 
     //default main view, shows a list of movie cards
     return (
-      <div className="main-view"> 
-        {movies.map(movie =>  <MovieCard key={movie._id} movie={movie}
-        onMovieClick={(movie) => {this.setSelectedMovie(movie) }} />)}
+      <div className="main-view">
+        <Navbar>
+          <Container fluid>
+            <Navbar.Brand href="#"> myFlix </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+            <Navbar.Collapse id="basic-navbar-nav">
+              <nav className="me-auto">
+                why doesn't this work
+                {/*<nav.link href="#"> link 1 </nav.link>*/}
+              </nav>
+            </Navbar.Collapse>  
+          </Container>
+        </Navbar>
+
+        <div>
+          <Container>
+            <Row className="main-view justify-content-md-center"> 
+              {movies.map(movie =>  (
+                <Col md={3}>
+                  <MovieCard key={movie._id} movie={movie}
+                  onMovieClick={(movie) => {this.setSelectedMovie(movie) }} />
+                </Col>
+              ))}
+            </Row>
+          </Container>
+        </div>
       </div>
     );
   }
