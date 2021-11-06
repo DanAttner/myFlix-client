@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
 import './registration-view.scss';
@@ -9,41 +10,52 @@ export function RegistrationView(props) {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [Birthday, setBirthday] = useState('');
-
-
+  const [errmessage, setErrmessage] = useState(false);
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(username, password, email, Birthday);
-    /* Send a request to the server for authentication */
-    /* then call props on registored user(username) */
-    props.onRegistration(username);
+    axios.post('https://dansflix.herokuapp.com/users', {
+      username: username,
+      password: password,
+      email: email,
+      birthday: Birthday
+    })
+    .then(response => {
+      const data = response.data;
+      console.log(data);
+      window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
+    })
+    .catch(e => {
+      console.log('error registering the user')
+      enableerr()
+      //if there is an error here, send some red text to the render
+      //set the redtext to be blank at start up with the startup component.
+
+    });
   };
 
+  function enableerr(){
+    setErrmessage(true)
+    console.log('here')
+  }
+
+  function errgate(){
+    if (errmessage){
+      return( 
+      <div>
+        <div className="red"> * Username must be alphanumeric and at least 5 characters</div>
+        <div className="red"> * Password must be at least 8 characters</div>
+        <div className="red"> * Email must be valid e-mail</div>
+        <div className="red"> * Birthday must be valid date</div> 
+      </div>
+      )
+    }
+  } 
 
   return (
- 
 
-    <Container fluid className="registerContainer" >
-    
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Container fluid>
-            <Navbar.Brand href="#">myFlix</Navbar.Brand>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
-                  <Nav.Link href="#"> link 1 </Nav.Link>
-                  <Nav.Link href="#"> link 2 </Nav.Link>
-                  <Nav.Link href="#"> link 3 </Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-     
-
-      
-
-    
+    <Container fluid className="registerContainer pt-5" >     
       <Row className="justify-content-md-center">
         <Col md={9}>
           <CardGroup>
@@ -105,6 +117,9 @@ export function RegistrationView(props) {
               </Card.Body>
             </Card>
         </CardGroup>
+        <div>
+          { errgate() }
+        </div>
         </Col>
       </Row>
     </Container>
@@ -112,6 +127,3 @@ export function RegistrationView(props) {
   );
 }
 
-RegistrationView.propTypes = {
-  onRegistration: PropTypes.func.isRequired,
-};

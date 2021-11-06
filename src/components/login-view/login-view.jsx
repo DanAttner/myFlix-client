@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
 
@@ -7,31 +8,45 @@ import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 
 export function LoginView(props) {
   const [ username, setUsername ] = useState('');
   const [ password, setPassword ] = useState('');
+  const [errmessage, setErrmessage] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(username, password);
     /* Send a request to the server for authentication */
-    /* then call props.onLoggedIn(username) */
-    props.onLoggedIn(username);
+    axios.post('https://dansflix.herokuapp.com/login', {
+        username: username,
+        password: password
+    })
+    .then(response => {
+        console.log(response.data)
+        const data = response.data;
+        props.onLoggedIn(data);
+    })
+    .catch(error => {
+        console.log('no such user')
+        enableerr()
+    });
   };
 
-  return (
-    <Container>
-        <Navbar bg="dark" variant="dark" expand="lg">
-            <Container fluid>
-                <Navbar.Brand href="#"> myFlix </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <Nav.Link href="#"> link 1 </Nav.Link>
-                        <Nav.Link href="#"> link 2 </Nav.Link>
-                        <Nav.Link href="#"> link 3 </Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
 
+
+  function enableerr(){
+    setErrmessage(true)
+    console.log('here')
+  }
+
+  function errgate(){
+    if (errmessage){
+      return( 
+      <div>
+        <div className="red"> * Invalid username or password </div> 
+      </div>
+      )
+    }
+  } 
+
+  return (
+    <Container className="pt-5">
         <Row className="justify-content-md-center">
             <Col md={9}>
                 <CardGroup>
@@ -72,6 +87,9 @@ export function LoginView(props) {
                         </Card.Body>
                     </Card>
                 </CardGroup>
+                <div>
+                    { errgate() }
+                </div>
             </Col>
         </Row>
     </Container>
