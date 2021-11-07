@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
+import { MovieCard } from '../movie-card/movie-card';
 
 
 export function ProfileView(props) {
@@ -24,16 +25,19 @@ export function ProfileView(props) {
   getUser()
 
   */
+  console.log("profile view ", props)
+  const favoriteMovies = props.fulluser.favorites;
 
-  const FavoriteMovies = this.fulluser.favorites;
+  const movies = props.movies;
 
-  const spitoutfavs = () =>{
-    return FavoriteMovies.map(movie =>  (
-      <Col md={3}>
-        <MovieCard key={this.movie._id} movie={this.movie} />
-      </Col>
-    ))
-  }
+
+  const spitoutfavs = () =>favoriteMovies.map(movieId =>  { 
+    const movie = movies.find((movie) => movie._id === movieId);
+    return <Col md={3}>
+      <MovieCard key={movie._id} movie={movie} />
+    </Col>
+    })
+  
 
 
   
@@ -41,7 +45,7 @@ export function ProfileView(props) {
   return (
     <Container className="pt-5">
         <Row className="justify-content-md-center">
-          {spitoutfavs}
+          {spitoutfavs()}
         </Row>
     </Container>
 

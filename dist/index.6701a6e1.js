@@ -22935,10 +22935,23 @@ class MainView extends _reactDefault.default.Component {
                 user: localStorage.getItem('user')
             });
             this.getMovies(accessToken);
+            this.getUser(accessToken, localStorage.getItem('user'));
         }
         if (localStorage.getItem('token')) this.setState({
             log: "logout",
             reg: ""
+        });
+    }
+    getUser(token, user) {
+        _axiosDefault.default.get(`https://dansflix.herokuapp.com/users/${user}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((response)=>{
+            console.log(response.data);
+            this.setState({
+                fulluser: response.data
+            });
         });
     }
     //gets movies if auth is good
@@ -22958,9 +22971,14 @@ class MainView extends _reactDefault.default.Component {
     }
     //When a user logs in, updates user state to that user
     onLoggedIn(authData) {
+        console.log('login ', {
+            user: authData.user.username,
+            log: "logout",
+            reg: ""
+        });
         this.setState({
             user: authData.user.username,
-            fulluser: authData,
+            fulluser: authData.user,
             log: "logout",
             reg: ""
         });
@@ -22974,148 +22992,158 @@ class MainView extends _reactDefault.default.Component {
         localStorage.removeItem('user');
         this.setState({
             user: null,
+            fulluser: null,
+            movies: null,
             log: "login",
             reg: "register"
         });
     }
     render() {
         const { movies , user , log , reg , fulluser  } = this.state;
+        console.log('render main view ', this.state, fulluser);
         //default main view, shows a list of movie cards
         return(//#### NAVBAR #####
         /*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.BrowserRouter, {
             __source: {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 98
+                lineNumber: 123
             },
             __self: this,
             children: /*#__PURE__*/ _jsxRuntime.jsxs("div", {
                 className: "main-view",
                 __source: {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 99
+                    lineNumber: 124
                 },
                 __self: this,
                 children: [
-                    /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar, {
-                        bg: "dark",
-                        variant: "dark",
-                        expland: "lg",
-                        fixed: "top",
+                    /*#__PURE__*/ _jsxRuntime.jsx(_reactDefault.default.Fragment, {
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 100
+                            lineNumber: 125
                         },
                         __self: this,
-                        children: /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Container, {
-                            fluid: true,
+                        children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar, {
+                            bg: "dark",
+                            variant: "dark",
+                            expland: "lg",
+                            fixed: "top",
                             __source: {
                                 fileName: "src/components/main-view/main-view.jsx",
-                                lineNumber: 101
+                                lineNumber: 126
                             },
                             __self: this,
-                            children: [
-                                /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar.Brand, {
-                                    href: `/`,
-                                    __source: {
-                                        fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 102
-                                    },
-                                    __self: this,
-                                    children: " myFlix "
-                                }),
-                                /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar.Toggle, {
-                                    "aria-controls": "basic-navbar-nav",
-                                    __source: {
-                                        fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 103
-                                    },
-                                    __self: this
-                                }),
-                                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Navbar.Collapse, {
-                                    id: "basic-navbar-nav",
-                                    __source: {
-                                        fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 104
-                                    },
-                                    __self: this,
-                                    children: [
-                                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Nav, {
-                                            className: "mr-auto",
-                                            __source: {
-                                                fileName: "src/components/main-view/main-view.jsx",
-                                                lineNumber: 105
-                                            },
-                                            __self: this,
-                                            children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Nav.Link, {
-                                                href: `/users/${user}`,
+                            children: /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Container, {
+                                fluid: true,
+                                __source: {
+                                    fileName: "src/components/main-view/main-view.jsx",
+                                    lineNumber: 127
+                                },
+                                __self: this,
+                                children: [
+                                    /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar.Brand, {
+                                        href: `/`,
+                                        __source: {
+                                            fileName: "src/components/main-view/main-view.jsx",
+                                            lineNumber: 128
+                                        },
+                                        __self: this,
+                                        children: " myFlix "
+                                    }),
+                                    /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Navbar.Toggle, {
+                                        "aria-controls": "basic-navbar-nav",
+                                        __source: {
+                                            fileName: "src/components/main-view/main-view.jsx",
+                                            lineNumber: 129
+                                        },
+                                        __self: this
+                                    }),
+                                    /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Navbar.Collapse, {
+                                        id: "basic-navbar-nav",
+                                        __source: {
+                                            fileName: "src/components/main-view/main-view.jsx",
+                                            lineNumber: 130
+                                        },
+                                        __self: this,
+                                        children: [
+                                            /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Nav, {
+                                                className: "mr-auto",
                                                 __source: {
                                                     fileName: "src/components/main-view/main-view.jsx",
-                                                    lineNumber: 106
+                                                    lineNumber: 131
                                                 },
                                                 __self: this,
-                                                children: " Profile "
-                                            })
-                                        }),
-                                        /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Nav, {
-                                            __source: {
-                                                fileName: "src/components/main-view/main-view.jsx",
-                                                lineNumber: 108
-                                            },
-                                            __self: this,
-                                            children: [
-                                                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Nav.Link, {
-                                                    href: `/`,
-                                                    onClick: this.onLoggedOut,
+                                                children: /*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.NavLink, {
+                                                    to: "/users/${user}",
                                                     __source: {
                                                         fileName: "src/components/main-view/main-view.jsx",
-                                                        lineNumber: 109
+                                                        lineNumber: 132
                                                     },
                                                     __self: this,
-                                                    children: [
-                                                        " ",
-                                                        log,
-                                                        " "
-                                                    ]
-                                                }),
-                                                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Nav.Link, {
-                                                    href: `/register/`,
-                                                    onClick: this.onLoggedOut,
-                                                    __source: {
-                                                        fileName: "src/components/main-view/main-view.jsx",
-                                                        lineNumber: 110
-                                                    },
-                                                    __self: this,
-                                                    children: [
-                                                        " ",
-                                                        reg,
-                                                        " "
-                                                    ]
+                                                    children: " Profile "
                                                 })
-                                            ]
-                                        })
-                                    ]
-                                })
-                            ]
+                                            }),
+                                            /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Nav, {
+                                                __source: {
+                                                    fileName: "src/components/main-view/main-view.jsx",
+                                                    lineNumber: 134
+                                                },
+                                                __self: this,
+                                                children: [
+                                                    /*#__PURE__*/ _jsxRuntime.jsxs(_reactRouterDom.NavLink, {
+                                                        to: "/",
+                                                        onClick: this.onLoggedOut,
+                                                        __source: {
+                                                            fileName: "src/components/main-view/main-view.jsx",
+                                                            lineNumber: 135
+                                                        },
+                                                        __self: this,
+                                                        children: [
+                                                            " ",
+                                                            log,
+                                                            " "
+                                                        ]
+                                                    }),
+                                                    /*#__PURE__*/ _jsxRuntime.jsxs(_reactRouterDom.NavLink, {
+                                                        to: "/register/",
+                                                        onClick: this.onLoggedOut,
+                                                        __source: {
+                                                            fileName: "src/components/main-view/main-view.jsx",
+                                                            lineNumber: 136
+                                                        },
+                                                        __self: this,
+                                                        children: [
+                                                            " ",
+                                                            reg,
+                                                            " "
+                                                        ]
+                                                    })
+                                                ]
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
                         })
                     }),
                     /*#__PURE__*/ _jsxRuntime.jsx("div", {
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 116
+                            lineNumber: 143
                         },
                         __self: this,
                         children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Container, {
                             className: "pt-5",
                             __source: {
                                 fileName: "src/components/main-view/main-view.jsx",
-                                lineNumber: 117
+                                lineNumber: 144
                             },
                             __self: this,
                             children: /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Row, {
                                 className: "main-view justify-content-md-center pt-3",
                                 __source: {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 118
+                                    lineNumber: 145
                                 },
                                 __self: this,
                                 children: [
@@ -23140,7 +23168,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 119
+                                            lineNumber: 146
                                         },
                                         __self: this
                                     }),
@@ -23158,7 +23186,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 133
+                                            lineNumber: 160
                                         },
                                         __self: this
                                     }),
@@ -23183,7 +23211,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 142
+                                            lineNumber: 169
                                         },
                                         __self: this
                                     }),
@@ -23211,7 +23239,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 156
+                                            lineNumber: 183
                                         },
                                         __self: this
                                     }),
@@ -23239,7 +23267,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 171
+                                            lineNumber: 198
                                         },
                                         __self: this
                                     }),
@@ -23267,7 +23295,7 @@ class MainView extends _reactDefault.default.Component {
                                         },
                                         __source: {
                                             fileName: "src/components/main-view/main-view.jsx",
-                                            lineNumber: 187
+                                            lineNumber: 214
                                         },
                                         __self: this
                                     })
@@ -40635,6 +40663,7 @@ var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
 var _reactBootstrap = require("react-bootstrap");
+var _movieCard = require("../movie-card/movie-card");
 function ProfileView(props) {
     /*
   const [ fulluser, setFulluser ] = useState('');
@@ -40653,41 +40682,45 @@ function ProfileView(props) {
   }
   getUser()
 
-  */ const FavoriteMovies = this.fulluser.favorites;
-    const spitoutfavs = ()=>{
-        return FavoriteMovies.map((movie)=>/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
+  */ console.log("profile view ", props);
+    const favoriteMovies = props.fulluser.favorites;
+    const movies = props.movies;
+    const spitoutfavs = ()=>favoriteMovies.map((movieId)=>{
+            const movie = movies.find((movie1)=>movie1._id === movieId
+            );
+            return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
                 md: 3,
                 __source: {
                     fileName: "src/components/profile-view/profile-view.jsx",
-                    lineNumber: 32
+                    lineNumber: 36
                 },
                 __self: this,
-                children: /*#__PURE__*/ _jsxRuntime.jsx(MovieCard, {
-                    movie: this.movie,
+                children: /*#__PURE__*/ _jsxRuntime.jsx(_movieCard.MovieCard, {
+                    movie: movie,
                     __source: {
                         fileName: "src/components/profile-view/profile-view.jsx",
-                        lineNumber: 33
+                        lineNumber: 37
                     },
                     __self: this
-                }, this.movie._id)
-            })
-        );
-    };
+                }, movie._id)
+            }));
+        })
+    ;
     return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Container, {
         className: "pt-5",
         __source: {
             fileName: "src/components/profile-view/profile-view.jsx",
-            lineNumber: 42
+            lineNumber: 46
         },
         __self: this,
         children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Row, {
             className: "justify-content-md-center",
             __source: {
                 fileName: "src/components/profile-view/profile-view.jsx",
-                lineNumber: 43
+                lineNumber: 47
             },
             __self: this,
-            children: spitoutfavs
+            children: spitoutfavs()
         })
     }));
 }
@@ -40700,6 +40733,6 @@ $RefreshReg$(_c, "ProfileView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-runtime":"8xIwr","react":"6TuXu","prop-types":"1tgq3","axios":"iYoWk","react-bootstrap":"h2YVd","@parcel/transformer-js/src/esmodule-helpers.js":"kXVTp","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9WecN"}],"jUTZ8":[function() {},{}]},["gGPkZ","7izg1","dLPEP"], "dLPEP", "parcelRequireaec4")
+},{"react/jsx-runtime":"8xIwr","react":"6TuXu","prop-types":"1tgq3","axios":"iYoWk","react-bootstrap":"h2YVd","../movie-card/movie-card":"6EiBJ","@parcel/transformer-js/src/esmodule-helpers.js":"kXVTp","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9WecN"}],"jUTZ8":[function() {},{}]},["gGPkZ","7izg1","dLPEP"], "dLPEP", "parcelRequireaec4")
 
 //# sourceMappingURL=index.6701a6e1.js.map

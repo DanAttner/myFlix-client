@@ -1,8 +1,8 @@
 import React from "react";
 import axios from 'axios';
-import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
+import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col, NavLink } from 'react-bootstrap';
 
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, NavLink } from "react-router-dom";
 
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
@@ -34,6 +34,7 @@ export class MainView extends React.Component {
         user: localStorage.getItem('user')
       });
       this.getMovies(accessToken)
+      this.getUser(accessToken, localStorage.getItem('user'))
     }
     if (localStorage.getItem('token')){
       this.setState({
@@ -42,6 +43,19 @@ export class MainView extends React.Component {
         }
       )
     }
+  }
+
+  getUser(token, user){
+    axios.get(`https://dansflix.herokuapp.com/users/${user}`, {
+      headers: {Authorization: `Bearer ${token}`}
+    })
+    .then(response => {
+      console.log(response.data)
+      this.setState({
+        fulluser: response.data
+      });
+    })
+
   }
 
 
@@ -64,12 +78,19 @@ export class MainView extends React.Component {
 
   //When a user logs in, updates user state to that user
   onLoggedIn(authData){
+    console.log('login ', {
+      user: authData.user.username,
+      log: "logout",
+      reg: ""
+    })
     this.setState({
       user: authData.user.username,
-      fulluser: authData,
+      fulluser: authData.user,
       log: "logout",
       reg: ""
     });
+
+  
 
     //storeing user session token and userlogin info in browser (username, hashed pass, ID )
     localStorage.setItem('token', authData.token);
@@ -82,6 +103,8 @@ export class MainView extends React.Component {
     localStorage.removeItem('user');
     this.setState({
       user: null,
+      fulluser: null,
+      movies: null,
       log: "login",
       reg: "register"
     });
@@ -90,6 +113,8 @@ export class MainView extends React.Component {
   render() {
     const { movies, user, log, reg, fulluser } = this.state;
 
+    console.log('render main view ', this.state, fulluser)
+
     //default main view, shows a list of movie cards
     return (
       
@@ -97,21 +122,23 @@ export class MainView extends React.Component {
       //#### NAVBAR #####
       <Router>
         <div className="main-view">
+          <React.Fragment>
             <Navbar bg="dark" variant="dark" expland="lg" fixed="top">
               <Container fluid>
                 <Navbar.Brand href={`/`}> myFlix </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="mr-auto">
-                    <Nav.Link href={`/users/${user}`}> Profile </Nav.Link>
+                    <NavLink to="/users/${user}"  > Profile </NavLink>
                   </Nav>
                   <Nav>
-                    <Nav.Link href={`/`} onClick={this.onLoggedOut}> {log} </Nav.Link>
-                    <Nav.Link href={`/register/`} onClick={this.onLoggedOut}> {reg} </Nav.Link>
+                    <NavLink to="/" onClick={this.onLoggedOut}> {log} </NavLink>
+                    <NavLink to="/register/" onClick={this.onLoggedOut}> {reg} </NavLink>
                   </Nav>
                 </Navbar.Collapse>  
               </Container>
             </Navbar>
+          </React.Fragment>
 
           <div>
             <Container className="pt-5">
