@@ -50,7 +50,6 @@ export class MainView extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     })
     .then(response => {
-      console.log(response.data)
       this.setState({
         fulluser: response.data
       });
@@ -58,11 +57,66 @@ export class MainView extends React.Component {
 
   }
 
+  //function to add favorite
+  handleAddFav = (movieId) => {
+    let favs = this.state.fulluser.favorites
+    let token = localStorage.getItem('token');
+    let localuser = localStorage.getItem('user')
+
+    if (favs.indexOf(movieId) >= 0){
+      axios.delete(`https://dansflix.herokuapp.com/users/${localuser}/movies/${movieId}`, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      .then(response => {
+        console.log('sucessful deletion of movie ', response)
+      })
+      .catch(e => {
+        console.log(' error deleting  fav', e)
+      });
+    }
+    else{
+      axios.post(`https://dansflix.herokuapp.com/users/${localuser}/movies/${movieId}`, {}, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      .then(response => {
+        console.log('sucessful add movie post ', response)
+      })
+      .catch(e => {
+        console.log(' error adding fav', e)
+      });
+    }
+  };
+  
+  //func to handle updateing user info
+  handleUpdateUser= (username,password,email) => {
+    let token = localStorage.getItem('token');
+    let localuser = localStorage.getItem('user')
+
+    console.log('bbbbbbbbbbbb' + username + password + email)
+
+    axios.put(`https://dansflix.herokuapp.com/users/${localuser}`, {
+      username: username,
+      password: password,
+      email: email,
+      birthday: this.state.fulluser.birthday
+    },
+    {
+      headers: {Authorization: `Bearer ${token}`}
+    })
+    .then(response => {
+      console.log('sucsessful update of user info  ', response);
+ //     window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
+    })
+    .catch(e => {
+      console.log('error updateing the user', e)
+
+    });
+  }
+
 
 
   //gets movies if auth is good
   getMovies(token){
-    console.log(token);
     axios.get('https://dansflix.herokuapp.com/movies', {
       headers: {Authorization: `Bearer ${token}`}
     })
@@ -90,21 +144,18 @@ export class MainView extends React.Component {
       reg: ""
     });
 
-  
-
     //storeing user session token and userlogin info in browser (username, hashed pass, ID )
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.username);
     this.getMovies(authData.token);
   }
 
-  onLoggedOut() {
+  onLoggedOut= () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.setState({
       user: null,
       fulluser: null,
-      movies: null,
       log: "login",
       reg: "register"
     });
@@ -113,7 +164,6 @@ export class MainView extends React.Component {
   render() {
     const { movies, user, log, reg, fulluser } = this.state;
 
-    console.log('render main view ', this.state, fulluser)
 
     //default main view, shows a list of movie cards
     return (
@@ -129,13 +179,13 @@ export class MainView extends React.Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="mr-auto">
-                    <NavLink to="/users/${user}"  > Profile </NavLink>
+                    <NavLink className="navbutton" to={`/users/${user}`}  > Profile </NavLink>
                   </Nav>
                   <Nav>
-                    <NavLink to="/" onClick={this.onLoggedOut}> {log} </NavLink>
-                    <NavLink to="/register/" onClick={this.onLoggedOut}> {reg} </NavLink>
+                    <NavLink className="navbutton" to="/" onClick={this.onLoggedOut}> {log} </NavLink>
+                    <NavLink className="navbutton" to="/register/" onClick={this.onLoggedOut}> {reg} </NavLink>
                   </Nav>
-                </Navbar.Collapse>  
+                </Navbar.Collapse>
               </Container>
             </Navbar>
           </React.Fragment>
@@ -175,7 +225,9 @@ export class MainView extends React.Component {
 
                   return <Col md={8}>
                     <MovieView movie={movies.find(m => 
-                      m._id === match.params.movieId)} 
+                      m._id === match.params.movieId)}
+                      handleAddFav={movieId => this.handleAddFav(movieId)}
+                      user={user} fulluser={fulluser}
                       onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
@@ -221,6 +273,7 @@ export class MainView extends React.Component {
 
                   return <Col md={8}>
                     <ProfileView fulluser={fulluser} movies={movies}
+                    handleUpdateUser={(username,password,email) => this.handleUpdateUser(username,password,email)}
                     onBackClick={() => history.goBack()}/>
                   </Col>
                 }} />

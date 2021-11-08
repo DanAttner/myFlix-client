@@ -3,12 +3,70 @@ import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
-
+//i need movieview to take in movies, onbackclick, and user so i can do my axios shit.
+//it was working before i added user. 
 export class MovieView extends React.Component {
+  constructor(){
+    super();
+    this.state = {
+      AddorRemove: null
+    }
+  }
+  
+  componentDidMount(){
+    let favs = this.props.fulluser.favorites
+    let movieId = this.props.movie._id
+
+    console.log(' favs favs favs you gay', favs)
+    console.log('movie id moviedij idfid you gay as fuck ', movieId)
+
+    if (favs.indexOf(movieId) >= 0){
+      console.log(' movie ID already exists in favorites')
+      this.setRemove()
+    }
+    else{
+      console.log(' movie ID does not  exist in favorites')
+      this.setAdd()
+    }
+    console.log('add or remove these nuts you fucker', this.state.AddorRemove)
+  }
+
+
+  setAdd = () =>{
+    console.log(' adding please')
+    this.setState({
+      AddorRemove: "Add to favorites"
+    })
+    console.log(this.AddorRemove)
+  }
+
+  setRemove = () =>{
+    console.log('removing please')
+    this.setState({ AddorRemove: "Remove from favorites"
+    })
+    console.log(this.AddorRemove)
+  }
+
+  /*
+  onLoggedOut= () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.setState({
+      user: null,
+      fulluser: null,
+      log: "login",
+      reg: "register"
+    });
+  }
+*/
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.handleAddFav(this.props.movie._id);
+    window.open('/', '_self');
+  };
 
   render() {
-    const { movie, onBackClick } = this.props;
-    console.log('movieview reached')
+    const { movie, onBackClick, fulluser, user, AddorRemove } = this.props;
 
     return (
 
@@ -19,20 +77,34 @@ export class MovieView extends React.Component {
             <Card.Body>
               <Card.Title>{movie.title}</Card.Title>
               <Card.Text>{movie.description}</Card.Text>
-              <Button onClick={() => {onBackClick()}} variant="link">Back</Button>
+                <div>
+                  Director: 
+                  <Link to ={`/directors/${movie.director.name}`}>
+                    <Button variant="link"> {movie.director.name}</Button>
+                  </Link>
+                </div>
 
-              <Link to ={`/directors/${movie.director.name}`}>
-                <Button variant="link"> {movie.director.name}</Button>
-              </Link>
+                <div>
+                  Genre: 
+                  <Link to ={`/genres/${movie.genre.name}`}>
+                    <Button variant="link">{movie.genre.name} </Button>
+                  </Link>
+                </div>
 
-              <Link to ={`/genres/${movie.genre.name}`}>
-                <Button variant="link">{movie.genre.name} </Button>
-              </Link>
+                <div>
+                  <Button className='Add/Removefav' href={`/`}
+                    variant="secondary"
+                    size="lg"
+                    type="submit"
+                    onClick={this.handleSubmit}> 
+                    {this.state.AddorRemove}
+                  </Button>
 
-              
+                </div>
 
 
             </Card.Body>
+            <Button onClick={() => {onBackClick()}}  variant="link">Back</Button>
           </Col>
         </Row>
       </Container>
