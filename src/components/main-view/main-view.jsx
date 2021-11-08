@@ -50,12 +50,17 @@ export class MainView extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     })
     .then(response => {
+      localStorage.setItem('user', response.data.username);
       this.setState({
-        fulluser: response.data
+        fulluser: response.data,
+        user: response.data.username
       });
+
     })
+    console.log('this is full user after getUser  ', this.fulluser)
 
   }
+
 
   //function to add favorite
   handleAddFav = (movieId) => {
@@ -87,12 +92,13 @@ export class MainView extends React.Component {
     }
   };
   
+
+
+  
   //func to handle updateing user info
   handleUpdateUser= (username,password,email) => {
     let token = localStorage.getItem('token');
     let localuser = localStorage.getItem('user')
-
-    console.log('bbbbbbbbbbbb' + username + password + email)
 
     axios.put(`https://dansflix.herokuapp.com/users/${localuser}`, {
       username: username,
@@ -104,13 +110,18 @@ export class MainView extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     })
     .then(response => {
-      console.log('sucsessful update of user info  ', response);
- //     window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
+      console.log('sucsessful update of user info  ', response.data);
+
+      this.getUser(token, username)
+
+      window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
+    
     })
     .catch(e => {
       console.log('error updateing the user', e)
 
     });
+
   }
 
 
