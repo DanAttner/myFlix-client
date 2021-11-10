@@ -23152,7 +23152,7 @@ class MainView extends _reactDefault.default.Component {
                                                         ]
                                                     }),
                                                     /*#__PURE__*/ _jsxRuntime.jsxs(_reactRouterDom.NavLink, {
-                                                        className: "navbutton",
+                                                        className: "navbutton pl-3",
                                                         to: "/register/",
                                                         onClick: this.onLoggedOut,
                                                         __source: {
@@ -40851,7 +40851,7 @@ function ProfileView(props) {
             const movie = movies.find((movie1)=>movie1._id === movieId
             );
             return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
-                md: 5,
+                md: 4,
                 __source: {
                     fileName: "src/components/profile-view/profile-view.jsx",
                     lineNumber: 46
@@ -40877,6 +40877,7 @@ function ProfileView(props) {
         __self: this,
         children: [
             /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Row, {
+                className: "mb-5",
                 __source: {
                     fileName: "src/components/profile-view/profile-view.jsx",
                     lineNumber: 58
@@ -40884,7 +40885,6 @@ function ProfileView(props) {
                 __self: this,
                 children: [
                     /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Col, {
-                        md: 6,
                         __source: {
                             fileName: "src/components/profile-view/profile-view.jsx",
                             lineNumber: 59
@@ -40959,7 +40959,7 @@ function ProfileView(props) {
                         ]
                     }),
                     /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
-                        md: 6,
+                        md: 8,
                         __source: {
                             fileName: "src/components/profile-view/profile-view.jsx",
                             lineNumber: 73
@@ -41119,22 +41119,34 @@ function ProfileView(props) {
                 className: "justify-content-md-center",
                 __source: {
                     fileName: "src/components/profile-view/profile-view.jsx",
-                    lineNumber: 122
+                    lineNumber: 121
                 },
                 __self: this,
-                children: this.spitoutfavs()
+                children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
+                    __source: {
+                        fileName: "src/components/profile-view/profile-view.jsx",
+                        lineNumber: 122
+                    },
+                    __self: this,
+                    children: /*#__PURE__*/ _jsxRuntime.jsx("h3", {
+                        className: "text-center",
+                        __source: {
+                            fileName: "src/components/profile-view/profile-view.jsx",
+                            lineNumber: 123
+                        },
+                        __self: this,
+                        children: " Favorite Movies "
+                    })
+                })
             }),
-            /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Button, {
-                onClick: ()=>{
-                    onBackClick();
-                },
-                variant: "link",
+            /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Row, {
+                className: "justify-content-md-center",
                 __source: {
                     fileName: "src/components/profile-view/profile-view.jsx",
                     lineNumber: 126
                 },
                 __self: this,
-                children: "Back"
+                children: this.spitoutfavs()
             })
         ]
     }));

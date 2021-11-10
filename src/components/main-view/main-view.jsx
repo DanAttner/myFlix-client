@@ -194,7 +194,7 @@ export class MainView extends React.Component {
                   </Nav>
                   <Nav>
                     <NavLink className="navbutton" to="/" onClick={this.onLoggedOut}> {log} </NavLink>
-                    <NavLink className="navbutton" to="/register/" onClick={this.onLoggedOut}> {reg} </NavLink>
+                    <NavLink className="navbutton pl-3" to="/register/" onClick={this.onLoggedOut}> {reg} </NavLink>
                   </Nav>
                 </Navbar.Collapse>
               </Container>
@@ -285,7 +285,7 @@ export class MainView extends React.Component {
                   return <Col md={8}>
                     <ProfileView fulluser={fulluser} movies={movies}
                     handleUpdateUser={(username,password,email) => this.handleUpdateUser(username,password,email)}
-                    onBackClick={() => history.goBack()}/>
+                    onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
               </Row>

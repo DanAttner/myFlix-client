@@ -43,7 +43,7 @@ export function ProfileView(props) {
 
   spitoutfavs = () => favoriteMovies.map(movieId =>  { 
     const movie = movies.find((movie) => movie._id === movieId);
-    return <Col md={5}>
+    return <Col md={4}>
       <MovieCard key={movie._id}  movie={movie} />
     </Col>
     })
@@ -55,8 +55,8 @@ export function ProfileView(props) {
 
   return (
     <Container className="pt-5">
-        <Row>
-          <Col md={6}>
+        <Row className="mb-5">
+          <Col>
             <CardGroup>
               <Card className="userinfo-card">
                 <Card.Body>
@@ -69,8 +69,8 @@ export function ProfileView(props) {
             <div>
               { errgate() }
             </div>
-          </Col>   
-          <Col md={6}>
+          </Col>  
+          <Col md={8}>
             <CardGroup>
               <Card className="updateinfo-card">
                 <Card.Body>
@@ -118,12 +118,15 @@ export function ProfileView(props) {
             </CardGroup>
           </Col> 
         </Row>
-
+        <Row className="justify-content-md-center">
+          <Col >
+            <h3 className="text-center"> Favorite Movies </h3> 
+          </Col>
+        </Row>
         <Row className="justify-content-md-center">
           {this.spitoutfavs()}
         </Row>
 
-        <Button onClick={() => {onBackClick()}} variant="link">Back</Button>
     </Container>
 
   );
