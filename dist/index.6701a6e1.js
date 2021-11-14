@@ -42428,7 +42428,7 @@ function ProfileView(props) {
     const favoriteMovies = props.fulluser.favorites;
     const movies = props.movies;
     //update user info func call
-    handleSubmit = (e)=>{
+    const handleSubmit = (e)=>{
         e.preventDefault();
         console.log('aaaaaaaaaaaaaaaaaaaaa' + username + password + email);
         props.handleUpdateUser(username, password, email);
