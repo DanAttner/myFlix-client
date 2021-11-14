@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
-//i need movieview to take in movies, onbackclick, and user so i can do my axios shit.
-//it was working before i added user. 
+//i need movieview to take in movies, onbackclick, and user so i can do my axios stuff.
 export class MovieView extends React.Component {
   constructor(){
     super();
@@ -17,9 +16,6 @@ export class MovieView extends React.Component {
     let favs = this.props.fulluser.favorites
     let movieId = this.props.movie._id
 
-    console.log(' favs favs favs you gay', favs)
-    console.log('movie id moviedij idfid you gay as fuck ', movieId)
-
     if (favs.indexOf(movieId) >= 0){
       console.log(' movie ID already exists in favorites')
       this.setRemove()
@@ -28,12 +24,10 @@ export class MovieView extends React.Component {
       console.log(' movie ID does not  exist in favorites')
       this.setAdd()
     }
-    console.log('add or remove these nuts you fucker', this.state.AddorRemove)
   }
 
 
   setAdd = () =>{
-    console.log(' adding please')
     this.setState({
       AddorRemove: "Add to favorites"
     })
@@ -41,7 +35,6 @@ export class MovieView extends React.Component {
   }
 
   setRemove = () =>{
-    console.log('removing please')
     this.setState({ AddorRemove: "Remove from favorites"
     })
     console.log(this.AddorRemove)

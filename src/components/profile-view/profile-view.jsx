@@ -5,6 +5,9 @@ import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 
 
 import { MovieCard } from '../movie-card/movie-card';
 
+import { connect } from 'react-redux';
+import { setUser, updateUser } from '../../actions/actions';
+
 
 export function ProfileView(props) {
   const [ username, setUsername ] = useState('');
@@ -132,3 +135,11 @@ export function ProfileView(props) {
   );
 }
 
+let mapStateToProps = state => {
+  return {
+    user: state.user,
+    movies: state.movies
+  }
+}
+
+export default connect(mapStateToProps, {setUser, updateUser})(ProfileView);
