@@ -44,7 +44,7 @@ export function ProfileView(props) {
 
 
 
-  spitoutfavs = () => favoriteMovies.map(movieId =>  { 
+  const spitoutfavs = () => favoriteMovies.map(movieId =>  { 
     const movie = movies.find((movie) => movie._id === movieId);
     return <Col md={4}>
       <MovieCard key={movie._id}  movie={movie} />
@@ -127,7 +127,7 @@ export function ProfileView(props) {
           </Col>
         </Row>
         <Row className="justify-content-md-center">
-          {this.spitoutfavs()}
+          {spitoutfavs()}
         </Row>
 
     </Container>

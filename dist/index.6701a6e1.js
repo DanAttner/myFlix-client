@@ -42455,7 +42455,7 @@ function ProfileView(props) {
             })
         }));
     }
-    spitoutfavs = ()=>favoriteMovies.map((movieId)=>{
+    const spitoutfavs = ()=>favoriteMovies.map((movieId)=>{
             const movie = movies.find((movie1)=>movie1._id === movieId
             );
             return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
@@ -42754,7 +42754,7 @@ function ProfileView(props) {
                     lineNumber: 129
                 },
                 __self: this,
-                children: this.spitoutfavs()
+                children: spitoutfavs()
             })
         ]
     }));
