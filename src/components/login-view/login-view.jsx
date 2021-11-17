@@ -21,7 +21,7 @@ export function LoginView(props) {
         props.onLoggedIn(data);
     })
     .catch(error => {
-        console.log('no such user')
+        console.log('no such user', error)
         enableerr()
     });
   };
@@ -94,9 +94,3 @@ export function LoginView(props) {
 
   );
 }
-
-const mapDispatchToProps = (dispatch) => ({
-    handleSubmit: (username, password) => dispatch(handleSubmit(username, password))
-  });
-  
-  export default connect(null, mapDispatchToProps)(LoginView);

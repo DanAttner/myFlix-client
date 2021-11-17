@@ -2,31 +2,63 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
-
-import { MovieCard } from '../movie-card/movie-card';
+import './profile-view.scss';
 
 import { connect } from 'react-redux';
-import { setUser, updateUser } from '../../actions/actions';
+import { setMovies  } from '../../actions/actions';
+import { setUser } from '../../actions/actions';
+import { setFulluser } from '../../actions/actions';
+
+import { useHistory } from 'react-router-dom';
+import { FavMovieCard } from '../fav-movie-card/fav-movie-card';
 
 
 export function ProfileView(props) {
   const [ username, setUsername ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ email, setEmail ] = useState('');
-  const [errmessage, setErrmessage] = useState(false);
+  const [ errmessage, setErrmessage] = useState(false);
 
   console.log("profile view ", props)
   const favoriteMovies = props.fulluser.favorites;
-
   const movies = props.movies;
+  const history = useHistory();
 
-  //update user info func call
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('aaaaaaaaaaaaaaaaaaaaa' + username + password + email)
-    props.handleUpdateUser(username, password, email);
-    enableerr()
-  };
+
+  //func to handle updateing user info
+  handleUpdateUser= (username,password,email) => {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    let token = localStorage.getItem('token');
+    let localuser = localStorage.getItem('user')
+
+   if(username.length >= 5 && password.length >= 8 ) {
+      console.log('your past the length check doing put now ');
+      axios.put(`https://dansflix.herokuapp.com/users/${localuser}`, {
+        username: username,
+        password: password,
+        email: email,
+        birthday: props.fulluser.birthday
+      },
+      {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      .then(response => {
+        console.log('sucsessful update of user info  ', response.data);
+        props.getUser(token, username) 
+      })
+      .catch(e => {
+        console.log('error updateing the user', e)
+        enableerr()
+
+      });
+    }
+    else{
+      console.log('you failed the update test, you lose, you get nothing, goodday sir');
+      enableerr()
+   }
+   
+
+  }
 
   function enableerr(){
     setErrmessage(true)
@@ -42,17 +74,36 @@ export function ProfileView(props) {
     }
   } 
 
+  const removefav = (movieId) => {
+    let token = localStorage.getItem('token');
+    let localuser = localStorage.getItem('user')
+
+    if (favoriteMovies.indexOf(movieId) >= 0){
+      axios.delete(`https://dansflix.herokuapp.com/users/${localuser}/movies/${movieId}`, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      .then(response => {
+        console.log('sucessful deletion of movie ', response)
+        props.getUser(token, localuser)
+      })
+      .catch(e => {
+        console.log(' error deleting  fav', e)
+      });
+    }
+  }
+
+
 
 
   const spitoutfavs = () => favoriteMovies.map(movieId =>  { 
     const movie = movies.find((movie) => movie._id === movieId);
     return <Col md={4}>
-      <MovieCard key={movie._id}  movie={movie} />
+      <div className="favoriteMoviesList">
+        <FavMovieCard key={movie._id}  movie={movie} />
+        <Button className="unfavoriteMovieButton text-center" variant="secondary" onClick={() => {removefav(movie._id) }} >Remove Favorite</Button>
+      </div>
     </Col>
     })
-
-    
-  
 
   
 
@@ -109,16 +160,17 @@ export function ProfileView(props) {
                       </Form.Group>
 
                       <Button className="updateButton"
-                        variant="primary"
+                        variant="success"
                         size="lg" 
-                        type="submit" 
-                        onClick={handleSubmit}
+                        type="button" 
+                        onClick={() => {handleUpdateUser(username, password, email)}}
                       > Update
                       </Button>
                       </Form>          
                 </Card.Body>
               </Card>
             </CardGroup>
+            <Button onClick={() => {history.goBack()}}  variant="link">Back</Button>
           </Col> 
         </Row>
         <Row className="justify-content-md-center">
@@ -138,8 +190,8 @@ export function ProfileView(props) {
 let mapStateToProps = state => {
   return {
     user: state.user,
-    movies: state.movies
+    fulluser: state.fulluser
   }
 }
 
-export default connect(mapStateToProps, {setUser, updateUser})(ProfileView);
+export default connect(mapStateToProps, {setUser, setFulluser})(ProfileView);

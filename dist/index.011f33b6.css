@@ -9,6 +9,17 @@
   color: steelblue;
 }
 
+.movie-view-nav {
+  width: 10%;
+}
+
+.unfavoriteMovieButton {
+  width: 100%;
+}
+.my-flix {
+  color: steelblue;
+}
+
 .backgroundcolor {
   background-color: #b7c4eb;
 }

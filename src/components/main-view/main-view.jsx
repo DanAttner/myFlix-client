@@ -4,7 +4,9 @@ import { Navbar, Nav, Form, Button, Card, CardGroup, Container, Row, Col, NavLin
 import { BrowserRouter as Router, Route, Redirect, NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { setMovies } from '../../actions/actions';
+import { setMovies  } from '../../actions/actions';
+import { setUser } from '../../actions/actions';
+import { setFulluser } from '../../actions/actions';
 import MoviesList from '../movies-list/movies-list';
 
 import { LoginView } from '../login-view/login-view';
@@ -20,8 +22,6 @@ class MainView extends React.Component {
   constructor(){
     super();
     this.state = {
-      user: null,
-      fulluser: null,
       log: 'login',
       reg: 'register'
     }
@@ -32,9 +32,6 @@ class MainView extends React.Component {
   componentDidMount(){
     let accessToken = localStorage.getItem('token');
     if (accessToken !== null) {
-      this.setState({
-        user: localStorage.getItem('user')
-      });
       this.getMovies(accessToken)
       this.getUser(accessToken, localStorage.getItem('user'))
     }
@@ -53,20 +50,21 @@ class MainView extends React.Component {
     })
     .then(response => {
       localStorage.setItem('user', response.data.username);
-      this.setState({
-        fulluser: response.data,
-        user: response.data.username
-      });
-
+      this.props.setUser(response.data.username)
+      this.props.setFulluser(response.data)
     })
-    console.log('this is full user after getUser  ', this.fulluser)
+    .catch( e=> {
+      console.log('error getting user ', e)
+      console.log('the username you tried and fucking failed is ', user)
+    })
+    console.log('this is full user after getUser  ', this.props.fulluser)
 
   }
 
 
   //function to add favorite
   handleAddFav = (movieId) => {
-    let favs = this.state.fulluser.favorites
+    let favs = this.props.fulluser.favorites
     let token = localStorage.getItem('token');
     let localuser = localStorage.getItem('user')
 
@@ -76,6 +74,7 @@ class MainView extends React.Component {
       })
       .then(response => {
         console.log('sucessful deletion of movie ', response)
+        this.getUser(token, localuser)
       })
       .catch(e => {
         console.log(' error deleting  fav', e)
@@ -87,6 +86,7 @@ class MainView extends React.Component {
       })
       .then(response => {
         console.log('sucessful add movie post ', response)
+        this.getUser(token, localuser)
       })
       .catch(e => {
         console.log(' error adding fav', e)
@@ -95,36 +95,6 @@ class MainView extends React.Component {
   };
   
 
-
-  
-  //func to handle updateing user info
-  handleUpdateUser= (username,password,email) => {
-    let token = localStorage.getItem('token');
-    let localuser = localStorage.getItem('user')
-
-    axios.put(`https://dansflix.herokuapp.com/users/${localuser}`, {
-      username: username,
-      password: password,
-      email: email,
-      birthday: this.state.fulluser.birthday
-    },
-    {
-      headers: {Authorization: `Bearer ${token}`}
-    })
-    .then(response => {
-      console.log('sucsessful update of user info  ', response.data);
-
-      this.getUser(token, username)
-
-      window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
-    
-    })
-    .catch(e => {
-      console.log('error updateing the user', e)
-
-    });
-
-  }
 
 
 
@@ -143,14 +113,10 @@ class MainView extends React.Component {
 
   //When a user logs in, updates user state to that user
   onLoggedIn(authData){
-    console.log('login ', {
-      user: authData.user.username,
-      log: "logout",
-      reg: ""
-    })
+
+    this.props.setUser(authData.user.username)
+    this.props.setFulluser(authData.user)
     this.setState({
-      user: authData.user.username,
-      fulluser: authData.user,
       log: "logout",
       reg: ""
     });
@@ -164,17 +130,19 @@ class MainView extends React.Component {
   onLoggedOut= () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+
+    this.props.setUser(null);
+    this.props.setFulluser(null);
+
     this.setState({
-      user: null,
-      fulluser: null,
       log: "login",
       reg: "register"
     });
   }
 
   render() {
-    const { user, log, reg, fulluser } = this.state;
-    let { movies } = this.props;
+    const { log, reg } = this.state;
+    let { movies, user, fulluser } = this.props;
 
 
     //default main view, shows a list of movie cards
@@ -236,6 +204,7 @@ class MainView extends React.Component {
                       m._id === match.params.movieId)}
                       handleAddFav={movieId => this.handleAddFav(movieId)}
                       user={user} fulluser={fulluser}
+                      getUser={(token, user) => this.getUser(token, user)}
                       onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
@@ -281,7 +250,7 @@ class MainView extends React.Component {
 
                   return <Col md={8}>
                     <ProfileView fulluser={fulluser} movies={movies}
-                    handleUpdateUser={(username,password,email) => this.handleUpdateUser(username,password,email)}
+                    getUser={(token, user) => this.getUser(token, user)}
                     onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
@@ -295,7 +264,9 @@ class MainView extends React.Component {
 }
 
 let mapStateToProps = state => {
-  return {movies: state.movies}
+  return {movies: state.movies,
+          user: state.user,
+          fulluser: state.fulluser}
 }
 
-export default connect(mapStateToProps, {setMovies} )(MainView);
+export default connect(mapStateToProps, {setMovies, setUser, setFulluser} )(MainView);
