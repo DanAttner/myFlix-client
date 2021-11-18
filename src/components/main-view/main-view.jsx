@@ -31,9 +31,13 @@ class MainView extends React.Component {
   //allows user to stay logged in
   componentDidMount(){
     let accessToken = localStorage.getItem('token');
+    console.log('this is access token on mount ', accessToken)
     if (accessToken !== null) {
       this.getMovies(accessToken)
       this.getUser(accessToken, localStorage.getItem('user'))
+    }
+    else{
+      this.props.setUser(null);
     }
     if (localStorage.getItem('token')){
       this.setState({
@@ -179,6 +183,7 @@ class MainView extends React.Component {
                   if (!user) return <Col>
                     <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
                   </Col>
+
 
                   return <MoviesList movies={movies} />
                   }}/>
