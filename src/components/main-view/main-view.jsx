@@ -11,11 +11,11 @@ import MoviesList from '../movies-list/movies-list';
 
 import { LoginView } from '../login-view/login-view';
 //import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-view/movie-view';
+import MovieView  from '../movie-view/movie-view';
 import { RegistrationView } from '../registration-view/registration-view';
 import { GenreView } from '../genre-view/genre-view';
 import { DirectorView } from '../director-view/director-view';
-import { ProfileView } from "../profile-view/profile-view";
+import ProfileView  from "../profile-view/profile-view";
 
 
 class MainView extends React.Component {
@@ -207,9 +207,6 @@ class MainView extends React.Component {
                   return <Col md={8}>
                     <MovieView movie={movies.find(m => 
                       m._id === match.params.movieId)}
-                      handleAddFav={movieId => this.handleAddFav(movieId)}
-                      user={user} fulluser={fulluser}
-                      getUser={(token, user) => this.getUser(token, user)}
                       onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
@@ -254,9 +251,7 @@ class MainView extends React.Component {
                   if (movies.length === 0) return <div className="main-view" />;
 
                   return <Col md={8}>
-                    <ProfileView fulluser={fulluser} movies={movies}
-                    getUser={(token, user) => this.getUser(token, user)}
-                    onBackClick={() => history.goBack()} />
+                    <ProfileView onBackClick={() => history.goBack()} />
                   </Col>
                 }} />
               </Row>

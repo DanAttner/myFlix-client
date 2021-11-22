@@ -20,14 +20,12 @@ export function ProfileView(props) {
   const [ errmessage, setErrmessage] = useState(false);
 
   console.log("profile view ", props)
-  const favoriteMovies = props.fulluser.favorites;
-  const movies = props.movies;
   const history = useHistory();
+
 
 
   //func to handle updateing user info
   handleUpdateUser= (username,password,email) => {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     let token = localStorage.getItem('token');
     let localuser = localStorage.getItem('user')
 
@@ -43,8 +41,8 @@ export function ProfileView(props) {
         headers: {Authorization: `Bearer ${token}`}
       })
       .then(response => {
-        console.log('sucsessful update of user info  ', response.data);
-        props.getUser(token, username) 
+        props.setFulluser(response.data)
+        props.setUser(response.data.username)
       })
       .catch(e => {
         console.log('error updateing the user', e)
@@ -78,13 +76,14 @@ export function ProfileView(props) {
     let token = localStorage.getItem('token');
     let localuser = localStorage.getItem('user')
 
-    if (favoriteMovies.indexOf(movieId) >= 0){
+    if (props.fulluser.favorites.indexOf(movieId) >= 0){
       axios.delete(`https://dansflix.herokuapp.com/users/${localuser}/movies/${movieId}`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       .then(response => {
         console.log('sucessful deletion of movie ', response)
-        props.getUser(token, localuser)
+        props.setFulluser(response.data)
+        props.setUser(response.data.username)
       })
       .catch(e => {
         console.log(' error deleting  fav', e)
@@ -95,8 +94,8 @@ export function ProfileView(props) {
 
 
 
-  const spitoutfavs = () => favoriteMovies.map(movieId =>  { 
-    const movie = movies.find((movie) => movie._id === movieId);
+  const spitoutfavs = () => props.fulluser.favorites.map(movieId =>  { 
+    const movie = props.movies.find((movie) => movie._id === movieId);
     return <Col md={4}>
       <div className="favoriteMoviesList">
         <FavMovieCard key={movie._id}  movie={movie} />
@@ -190,7 +189,8 @@ export function ProfileView(props) {
 let mapStateToProps = state => {
   return {
     user: state.user,
-    fulluser: state.fulluser
+    fulluser: state.fulluser,
+    movies: state.movies
   }
 }
 

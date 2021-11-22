@@ -11,41 +11,20 @@ import { setFulluser } from '../../actions/actions';
 
 //i need movieview to take in movies, onbackclick, and user so i can do my axios stuff.
 export class MovieView extends React.Component {
-  constructor(){
-    super();
-    this.state = {
-      AddorRemove: null
-    }
-  }
-  
-  componentDidMount(){
-    let favs = this.props.fulluser.favorites
-    let movieId = this.props.movie._id
-
-    if (favs.indexOf(movieId) >= 0){
-      console.log(' movie ID already exists in favorites')
-      this.setRemove()
-    }
-    else{
-      console.log(' movie ID does not  exist in favorites')
-      this.setAdd()
-    }
-  }
-
 
   handleAddFav = (movieId) => {
     let favs = this.props.fulluser.favorites
     let token = localStorage.getItem('token');
     let localuser = localStorage.getItem('user')
 
-    if (favs.indexOf(movieId) >= 0){
+    if (favs.includes(this.props.movie._id) == true){
       axios.delete(`https://dansflix.herokuapp.com/users/${localuser}/movies/${movieId}`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       .then(response => {
         console.log('sucessful deletion of movie ', response)
-        this.props.getUser(token, localuser)
-        this.setAdd()
+        this.props.setFulluser(response.data)
+        this.props.setUser(response.data.username)
       })
       .catch(e => {
         console.log(' error deleting  fav', e)
@@ -57,8 +36,8 @@ export class MovieView extends React.Component {
       })
       .then(response => {
         console.log('sucessful add movie post ', response)
-        this.props.getUser(token, localuser)
-        this.setRemove()
+        this.props.setFulluser(response.data)
+        this.props.setUser(response.data.username)
       })
       .catch(e => {
         console.log(' error adding fav', e)
@@ -66,43 +45,12 @@ export class MovieView extends React.Component {
     }
   };
 
-/*  toggleAddorRemove(){
-    let favs = this.props.fulluser.favorites
-    let movieId = this.props.movie._id
 
-    if (favs.indexOf(movieId) >= 0){
-      console.log(' movie ID already exists in favorites')
-      this.setRemove()
-    }
-    else{
-      console.log(' movie ID does not  exist in favorites')
-      this.setAdd()
-    }    
-  }
-*/
-
-  setAdd = () =>{
-    this.setState({
-      AddorRemove: "Add to favorites"
-    })
-    console.log('set state to add fav ', this.state.AddorRemove)
-  }
-
-  setRemove = () =>{
-    this.setState({ AddorRemove: "Remove from favorites"
-    })
-    console.log('set state to remove fav ', this.state.AddorRemove)
-  }
-
-
- /* handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.handleAddFav(this.props.movie._id);
-    this.toggleAddorRemove();
-  };
-*/
   render() {
-    const { movie, onBackClick, fulluser, user, AddorRemove } = this.props;
+    const { movie, onBackClick } = this.props;
+
+    const isfavorite = (this.props.fulluser.favorites.includes(this.props.movie._id))
+
 
     return (
 
@@ -133,7 +81,7 @@ export class MovieView extends React.Component {
                     size="lg"
                     type="submit"
                     onClick={() => {this.handleAddFav(movie._id)}}> 
-                    {this.state.AddorRemove}
+                    {isfavorite == true ?  <text> Remove from favorites </text> : <text> Add to favorites </text>}
                   </Button>
 
                 </div>
@@ -151,7 +99,8 @@ export class MovieView extends React.Component {
 let mapStateToProps = state => {
   return {
     user: state.user,
-    fulluser: state.fulluser
+    fulluser: state.fulluser,
+    movies: state.movies
   }
 }
 
